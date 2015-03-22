@@ -1,0 +1,14 @@
+def compute_grad_metric(w, x1, x2, label1, label2, lam=1):
+    grad = np.zeros(w.shape)
+    for elno in xrange(x1.shape[0]):
+        if label1[elno] == label2[elno]:
+            for i in xrange(w.shape[0]):
+                for j in xrange(w.shape[1]):
+                    grad[i, j] += 2 * w[i,j] * (x1[elno, j] - x2[elno, j]) ** 2 #+ lam * w[i, j]
+        else:
+            for i in xrange(w.shape[0]):
+                for j in xrange(w.shape[1]):
+                    if np.linalg.norm(w.dot(x1[elno] - x2[elno])) < 1:
+                        grad[i, j] += - 2 * w[i,j] * (x1[elno, j] - x2[elno, j]) ** 2 #+ lam * w[i, j]
+    grad = grad / x1.shape[0] + lam * w
+    return grad
